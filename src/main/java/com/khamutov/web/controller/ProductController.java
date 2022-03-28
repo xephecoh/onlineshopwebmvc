@@ -59,7 +59,6 @@ public class ProductController {
                 .name(name)
                 .build(), 1);
         Session session =(Session) request.getAttribute("session");
-        System.out.println(session.getUserName());
         cartService.addToCart(cartItem, session.getUserName());
         List<CartItem> userCart = cartService.getUserCart(session.getUserName());
         modelMap.addAttribute("userCart", userCart);

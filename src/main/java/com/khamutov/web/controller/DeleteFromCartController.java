@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @Controller
 class DeleteFromCartController {
@@ -20,7 +22,11 @@ class DeleteFromCartController {
 
     @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST)
     public String deleteFromCart(@RequestParam String productName,
-                                 @RequestParam Session session) {
+                                 HttpServletRequest request) {
+        Session session =(Session) request.getAttribute("session");
+        if(session==null){
+            throw new RuntimeException("No such attribute inside request");
+        }
         cartService.deleteProductFromCart(productName, session.getUserName());
         return "redirect:/products";
     }

@@ -14,20 +14,23 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class RegisterController {
     private final UserService userService;
+    private final String SEND_REDIRECT = "redirect:/login";
+    private final String REGISTER = "/register";
+
 
     @Autowired
     public RegisterController(UserService userService) {
         this.userService = userService;
     }
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = REGISTER, method = RequestMethod.POST)
     public String login(@RequestParam String name,
                         @RequestParam String repeatPassword,
                         @RequestParam String password) {
         if (!password.equals(repeatPassword)) {
-            return "redirect:/login";
+            return SEND_REDIRECT;
         }
         userService.saveUser(name, password);
-        return "redirect:/login";
+        return SEND_REDIRECT;
     }
 
 

@@ -16,18 +16,22 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class LoginController {
     private final SecurityService securityService;
+    private final String LOGIN = "login";
+    private final String LOGIN_URI = "login";
+    private final String SEND_REDIRECT = "redirect:/products";
+
 
     @Autowired
     public LoginController( SecurityService securityService) {
         this.securityService = securityService;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = LOGIN_URI, method = RequestMethod.GET)
     public String login() {
-        return "login";
+        return LOGIN;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = LOGIN_URI, method = RequestMethod.POST)
     public String login(@RequestParam String username,
                         @RequestParam String password,
                         ModelMap modelMap,
@@ -35,12 +39,12 @@ public class LoginController {
         boolean login = securityService.login(username, password);
         if (!login) {
             modelMap.addAttribute("rejected","true");
-           return  "login";
+           return  LOGIN;
         }
         Cookie cookieWithToken = securityService.generateCookie(username);
         Cookie userName = new Cookie("userName", username);
         response.addCookie(userName);
         response.addCookie(cookieWithToken);
-        return "redirect:/products";
+        return SEND_REDIRECT;
     }
 }

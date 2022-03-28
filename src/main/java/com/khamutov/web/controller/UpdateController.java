@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UpdateController {
     private final ProductService service;
+    private final String REDIRECT = "redirect:/login";
 
     @Autowired
     public UpdateController(ProductService service) {
@@ -27,7 +28,7 @@ public class UpdateController {
         modelMap.addAttribute("id", id);
         modelMap.addAttribute("name", name);
         modelMap.addAttribute("price", price);
-        return "redirect:/update";
+        return "update";
     }
 
     @RequestMapping(value = "/update/{product.name}/{product.price}", method = RequestMethod.PUT)

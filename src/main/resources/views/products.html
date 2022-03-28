@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Web 1</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="w-25 p-3 float-right" style="background-color: #eee;">
+    <#if userCart?has_content>
+<div >
+    <h2>Items of your cart</h2>
+</div>
+<table class="table table-bordered table-striped" >
+    <thead>
+    <tr>
+        <th style="max-width: 15%">Name</th>
+        <th style="max-width: 15%">Quantity</th>
+        <th style="max-width: 15%">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <#list userCart as item>
+    <tr>
+        <td>${item.product.name}</td>
+        <td>${item.quantity}</td>
+        <td>
+            <form action="/deleteFromCart" method="POST">
+                <input type="hidden" name="productName" value="${item.product.name}" >
+                <input type="submit" class="btn btn-danger" value="Delete" name="btn"
+                       onclick="if(!(confirm('Are you sure you want delete this product'))) return false"></form>
+        </td>
+    </tr>
+    </#list>
+    </tbody>
+</table>
+</#if>
+</div>
+<label>
+    <div >
+        <h2>Online shop product list</h2>
+    </div>
+</label>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <#list products as product>
+    <tr>
+        <td>${product.id}</td>
+        <td>${product.name}</td>
+        <td>${product.price}</td>
+        <td>
+            <form action="/delete/{product.id}" method="POST"><!--id="deleteForm">-->
+                <input type="hidden" name="id" value="${product.id}" id="id">
+                <#if userRole == 'ADMIN'>
+                <input type="submit" class="btn btn-danger m-1 pb-1" value="Delete" name="btn"
+                       onclick="if(!(confirm('Are you sure you want delete this product'))) return false"></form>
+                </#if>
+            <form action="/update/{product.id}/{product.name}/{product.price}" method="POST">
+                <input type="hidden" value="${product.id}" name="id">
+                <input type="hidden" value="${product.name}" name="name">
+                <input type="hidden" value="${product.price}" name="price">
+                <#if userRole == 'ADMIN'>
+                <input type="submit" class="btn btn-primary m-1 pb-1 " id="updateButton"  value="Update" name="updateButton"></form>
+                </#if>
+            <form action="/products" method="POST">
+                <input type="hidden" value="${product.id}" name="id">
+                <input type="hidden" value="${product.name}" name="name">
+                <input type="hidden" value="${product.price}" name="price">
+                <input type="submit" class="btn btn-info btn-md" id="addButton"  value="Add item to cart" name="addToCart"></form>
+        </td>
+    </tr>
+    </#list>
+    </tbody>
+</table>
+
+<script src="/script/delete.js"></script>
+</body>
+</html>

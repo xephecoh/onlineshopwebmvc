@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.logging.Logger;
 
 @Component
 public class JdbcUserDao implements UserDao {
@@ -14,6 +15,8 @@ public class JdbcUserDao implements UserDao {
     private final static String INSERT_USER = "INSERT INTO users (user_name,user_password) VALUES (?,?)";
     private final static String GET_USER_BY_NAME = "SELECT * FROM users WHERE user_name = ?";
     private final static String GET_USER_ROLE = "SELECT user_role FROM users WHERE user_name = ?";
+    private final Logger logger = Logger.getLogger(JdbcCartDao.class.getName());
+
 
 
     @Autowired
@@ -45,6 +48,7 @@ public class JdbcUserDao implements UserDao {
              PreparedStatement statement = connection.prepareStatement(INSERT_USER);
              PreparedStatement checkUserIfExistsStatement = connection.prepareStatement(GET_USER_BY_NAME)
         ) {
+
             checkUserIfExistsStatement.setString(1, name);
             ResultSet resultSet = checkUserIfExistsStatement.executeQuery();
             if (resultSet.next()) {
@@ -54,7 +58,7 @@ public class JdbcUserDao implements UserDao {
             statement.setString(2, password);
             statement.executeUpdate();
         } catch (SQLException sqlException) {
-            System.out.println("Unable to save user with name " + name + sqlException.getMessage());
+            logger.info("Unable to save user with name " + name + sqlException.getMessage());
         }
     }
 

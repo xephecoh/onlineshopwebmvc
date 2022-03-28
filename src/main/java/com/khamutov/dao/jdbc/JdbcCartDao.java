@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Component
 public class JdbcCartDao implements CartDao {
@@ -20,6 +21,8 @@ public class JdbcCartDao implements CartDao {
     private static final String CHECK_IF_ALREADY_INSIDE = "SELECT * from users_carts where user_name = ? and product_name = ?";
     private static final String INSERT = "UPDATE users_carts SET product_quantity = ? WHERE id = ? ";
     private final PGSimpleDataSource postgresDataSources;
+    private final Logger logger = Logger.getLogger(JdbcCartDao.class.getName());
+
 
     @Autowired
     public JdbcCartDao(PGSimpleDataSource dataSource, ProductRowMapper mapper) {
@@ -53,7 +56,7 @@ public class JdbcCartDao implements CartDao {
                 resultSet.close();
             }
         } catch (SQLException e) {
-            System.out.println("Unable to save product to cart " + e.getMessage());
+           logger.info("Unable to save product to cart " + e.getMessage());
         }
     }
 
@@ -72,7 +75,7 @@ public class JdbcCartDao implements CartDao {
             resultSet.close();
             return cartItemList;
         } catch (SQLException e) {
-            System.out.println("Unable get user cart " + e.getMessage());
+            logger.info("Unable get user cart " + e.getMessage());
         }
         return null;
     }
@@ -86,7 +89,7 @@ public class JdbcCartDao implements CartDao {
             statement.setString(2, itemName);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Unable to delete" + e.getMessage());
+            logger.info("Unable to delete" + e.getMessage());
         }
     }
 }

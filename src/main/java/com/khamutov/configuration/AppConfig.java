@@ -1,4 +1,4 @@
-package com.khamutov.web;
+package com.khamutov.configuration;
 
 import com.khamutov.configuration.PropertiesReader;
 import org.postgresql.ds.PGSimpleDataSource;

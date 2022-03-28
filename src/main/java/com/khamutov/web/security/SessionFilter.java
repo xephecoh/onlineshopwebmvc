@@ -15,22 +15,27 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class SessionFilter implements Filter {
+    private SecurityService securityService;
     @Override
     public void init(FilterConfig filterConfig) {
+        ServletContext servletContext = filterConfig.getServletContext();
+        WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        if(webApplicationContext==null){
+            return;
+        }
+        if(securityService==null){
+            return;
+        }
+        securityService = webApplicationContext.getBean(SecurityService.class);
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        ServletContext servletContext = request.getServletContext();
-        WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
-       if(webApplicationContext==null){
-           response.sendRedirect("/login");
-           return;
-       }
-        SecurityService securityService = webApplicationContext.getBean(SecurityService.class);
+
+
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             response.sendRedirect("/login");

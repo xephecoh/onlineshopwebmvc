@@ -36,12 +36,12 @@ public abstract class SessionFilter implements Filter {
             response.sendRedirect("/login");
             return;
         }
+        securityService.recalculateList();
         Optional<String> optionalToken = Stream.of(cookies)
                 .filter(cookie -> cookie.getName().equals("token"))
                 .map(Cookie::getValue)
                 .filter(securityService::isTokenPresent)
                 .findAny();
-        securityService.recalculateList();
         if (optionalToken.isEmpty()) {
             response.sendRedirect("/login");
         } else {
